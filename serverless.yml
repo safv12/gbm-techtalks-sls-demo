@@ -26,7 +26,7 @@ custom:
   config:
     default:
       timeout: 30
-      bucket_name: gbm-techtalks-documents
+      bucket_name: gbm-techtalks-documents-${self:provider.stage}
     stg: 
       memory_size: 512
     prd:
