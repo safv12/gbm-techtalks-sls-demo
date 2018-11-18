@@ -1,0 +1,27 @@
+{
+  "name": "sls-demo",
+  "version": "1.0.0-beta",
+  "description": "Serverless function to convert PDF to image",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/safv12/gbm-techtalks-sls-demo.git"
+  },
+  "keywords": [
+    "serverless"
+  ],
+  "author": "safv12",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/safv12/gbm-techtalks-sls-demo/issues"
+  },
+  "homepage": "https://github.com/safv12/gbm-techtalks-sls-demo#readme",
+  "dependencies": {
+    "async": "^2.6.1",
+    "gm": "^1.23.1",
+    "mktemp": "^0.4.0"
+  }
+}
