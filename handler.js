@@ -5,8 +5,8 @@ var fs = require("fs");
 var mktemp = require("mktemp");
 
 var RESULT_DIR = "outputs/";
-var IMAGE_WIDTH = 550;
-var IMAGE_HEIGHT = 550;
+var IMAGE_WIDTH = 950;
+var IMAGE_HEIGHT = 950;
 var ALLOWED_FILETYPES = ['pdf'];
 
 var utils = {
@@ -114,10 +114,11 @@ exports.upload = function(event, context, callback) {
     let decodedFile = Buffer.from(encodedFile, 'base64');
 
     var filePath = request.filename;
+    var bucket = process.env.BUCKET_NAME
 
     var s3Request = {
         "Body": decodedFile,
-        "Bucket": "gbm-techtalks-documents",
+        "Bucket": bucket,
         "Key": filePath
     };
 

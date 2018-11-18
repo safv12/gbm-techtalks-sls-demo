@@ -26,6 +26,7 @@ custom:
   config:
     default:
       timeout: 30
+      bucket_name: gbm-techtalks-documents
     stg: 
       memory_size: 512
     prd:
@@ -41,6 +42,7 @@ functions:
     handler: handler.upload
     environment:
       APP_ENV: ${self:provider.stage}
+      BUCKET_NAME: ${self:custom.config.default.bucket_name}
     events:
     - http:
         path: files
@@ -56,7 +58,7 @@ functions:
       APP_ENV: ${self:provider.stage}
     events:
     - s3: 
-        bucket: gbm-techtalks-documents
+        bucket: ${self:custom.config.default.bucket_name}
         event: s3:ObjectCreated:*
         rules:
         - suffix: .pdf
