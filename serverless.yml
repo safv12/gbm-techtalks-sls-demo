@@ -1,0 +1,51 @@
+# Serverless functions to convert PDF files into images.
+---
+service: techtalks-demo
+
+# Also you can use version ranges: frameworkVersion: ">=1.0.0 <2.0.0"
+frameworkVersion: "=1.33.1"
+
+provider:
+  name: aws
+  stage: ${opt:env, 'stg'}
+  region: ${opt:region, 'us-east-1'}
+  versionFunctions: false
+  iamRoleStatements:
+  - Effect: Allow
+    Action:
+    - logs:CreateLogGroup
+    - logs:CreateLogStream
+    - logs:PutLogEvents
+    Resource: arn:aws:logs:*:*:*
+  - Effect: Allow
+    Action:
+    - s3:*
+    Resource: "*" #arn:aws:s3:::gbm-techtalks-documents
+
+custom:
+  config:
+    default:
+      timeout: 30
+    stg: 
+      memory_size: 512
+    prd:
+      memory:size: 1024
+
+functions:
+  ConvertToImage:
+    description: Covert the PDF file into image
+    memorySize: ${self:custom.config.${self:provider.stage}.memory_size}
+    timeout: ${self:custom.config.default.timeout}
+    runtime: nodejs6.10
+    handler: handler.convert
+    environment:
+      APP_ENV: ${self:provider.stage}
+    events:
+    - s3: 
+        bucket: gbm-techtalks-documents
+        event: s3:ObjectCreated:*
+        rules:
+        - suffix: .pdf
+    tags:
+      Name: pdf-converter
+      managed_by: serverless
