@@ -5,8 +5,8 @@ var fs = require("fs");
 var mktemp = require("mktemp");
 
 var RESULT_DIR = "outputs/";
-var IMAGE_WIDTH = 150;
-var IMAGE_HEIGHT = 150;
+var IMAGE_WIDTH = 550;
+var IMAGE_HEIGHT = 550;
 var ALLOWED_FILETYPES = ['pdf'];
 
 var utils = {
@@ -37,7 +37,7 @@ exports.convert = function(event, context) {
   fileType = fileType[0].substr(1);
 
   if (ALLOWED_FILETYPES.indexOf(fileType) === -1) {
-    console.error("Filetype " + fileType + " not valid for thumbnail, exiting");
+    console.error("Filetype " + fileType + " not valid for convert, exiting");
     return;
   }
 
@@ -69,12 +69,6 @@ exports.convert = function(event, context) {
         }
 
         image.size(function(err, size) {
-          /*
-           * scalingFactor should be calculated to fit either the width or the height
-           * within 150x150 optimally, keeping the aspect ratio. Additionally, if the image 
-           * is smaller than 150px in both dimensions, keep the original image size and just 
-           * convert to png for the thumbnail's display
-           */
           var scalingFactor = Math.min(1, IMAGE_WIDTH / size.width, IMAGE_HEIGHT / size.height),
           width = scalingFactor * size.width,
           height = scalingFactor * size.height;
@@ -101,10 +95,7 @@ exports.convert = function(event, context) {
           Key: dstKey,
           Body: data,
           ContentType: "image/png",
-          ACL: 'public-read',
-          Metadata: {
-            thumbnail: 'TRUE'
-          }
+          ACL: 'public-read'
         }, next);
       }
 
