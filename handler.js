@@ -52,7 +52,7 @@ exports.convert = function(event, context) {
         }, next);
       },
 
-      function createThumbnail(response, next) {
+      function convertToPdf(response, next) {
         console.log("Converting document to image...");
         var temp_file, image;
 
@@ -60,12 +60,6 @@ exports.convert = function(event, context) {
           temp_file = mktemp.createFileSync("/tmp/XXXXXXXXXX.pdf")
           fs.writeFileSync(temp_file, response.Body);
           image = gm(temp_file + "[0]");
-        } else if (fileType === 'gif') {
-          temp_file = mktemp.createFileSync("/tmp/XXXXXXXXXX.gif")
-          fs.writeFileSync(temp_file, response.Body);
-          image = gm(temp_file + "[0]");
-        } else {
-          image = gm(response.Body);
         }
 
         image.size(function(err, size) {
@@ -113,3 +107,27 @@ exports.convert = function(event, context) {
         context.done();
       });
 };
+
+exports.upload = function(event, context, callback) {
+    var request = JSON.parse(event.body);
+    let encodedFile = request.document;
+    let decodedFile = Buffer.from(encodedFile, 'base64');
+
+    var filePath = request.filename;
+
+    var s3Request = {
+        "Body": decodedFile,
+        "Bucket": "gbm-techtalks-documents",
+        "Key": filePath
+    };
+
+    s3.upload(s3Request, function(err, data) {
+        let response = {
+            "statusCode": 200,
+            "body": JSON.stringify(data),
+            "isBase64Encoded": false
+        };
+
+        callback(null, response);
+    });
+}

@@ -32,6 +32,20 @@ custom:
       memory:size: 1024
 
 functions:
+
+  UploadFile:
+    description: Uploads a new file
+    memorySize: ${self:custom.config.${self:provider.stage}.memory_size}
+    timeout: ${self:custom.config.default.timeout}
+    runtime: nodejs6.10
+    handler: handler.upload
+    environment:
+      APP_ENV: ${self:provider.stage}
+    events:
+    - http:
+        path: files
+        method: post
+
   ConvertToImage:
     description: Covert the PDF file into image
     memorySize: ${self:custom.config.${self:provider.stage}.memory_size}
