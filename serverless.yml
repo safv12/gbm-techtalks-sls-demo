@@ -30,7 +30,7 @@ custom:
     stg: 
       memory_size: 512
     prd:
-      memory:size: 1024
+      memory_size: 1024
 
 functions:
 
